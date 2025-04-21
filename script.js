@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 const assets = {
     images: {
         shopBg: new Image(),
-        soulImg: new Image()
+        soulImg: new Image(),
     },
     sounds: {
         textSFX: new Audio('res/snd/snd_text.wav'),
@@ -16,8 +16,18 @@ const assets = {
 let assetsLoaded = {
     shopBg: false,
     soulImg: false,
-    font: false
+    font: false,
+    shopkeeperImages: false
 };
+
+const shopkeeperImages = {}; // { expression: [frame1, frame2] }
+const expressions = ['neutral','shocked'];
+let currentExpression = 'neutral';
+let currentFrame = 0;
+let animationTimer = 0;
+
+let totalFramesToLoad = 0;
+let framesLoaded = 0;
 
 let soundEnabled = false;
 
@@ -52,6 +62,24 @@ function loadAssets() {
         checkAllAssetsLoaded();
     };
 
+    // Load shopkeeper frames
+    expressions.forEach((expr) => {
+        shopkeeperImages[expr] = [];
+        for (let i = 1; i <= 2; i++) {
+            totalFramesToLoad++;
+            const img = new Image();
+            img.src = `res/img/alix/${expr}${i}.png`;
+            img.onload = () => {
+                shopkeeperImages[expr][i - 1] = img;
+                framesLoaded++;
+                if (framesLoaded === totalFramesToLoad) {
+                    assetsLoaded.shopkeeperImages = true;
+                    checkAllAssetsLoaded();
+                }
+            };
+        }
+    });
+
     assets.font.load().then((loadedFont) => {
         document.fonts.add(loadedFont);
         assetsLoaded.font = true;
@@ -60,7 +88,12 @@ function loadAssets() {
 }
 
 function checkAllAssetsLoaded() {
-    if (assetsLoaded.shopBg && assetsLoaded.soulImg && assetsLoaded.font) {
+    if (
+        assetsLoaded.shopBg &&
+        assetsLoaded.soulImg &&
+        assetsLoaded.shopkeeperImages &&
+        assetsLoaded.font
+    ) {
         const enterBtn = document.getElementById('enterButton');
         enterBtn.style.display = 'block';
         enterBtn.classList.add('show');
@@ -72,7 +105,12 @@ function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    if (assetsLoaded.shopBg && assetsLoaded.soulImg && assetsLoaded.font) {
+    if (
+        assetsLoaded.shopBg &&
+        assetsLoaded.soulImg &&
+        assetsLoaded.font &&
+        assetsLoaded.shopkeeperImages
+    ) {
         draw();
     }
 }
@@ -109,9 +147,15 @@ let drawX = 0;
 let drawY = 0;
 
 function tryDraw() {
-    if (assetsLoaded.shopBg && assetsLoaded.soulImg && assetsLoaded.font && soundEnabled) {
-        draw();
+    if (
+        assetsLoaded.shopBg &&
+        assetsLoaded.soulImg &&
+        assetsLoaded.shopkeeperImages &&
+        assetsLoaded.font &&
+        soundEnabled
+    ) {
         startDialogue("Hi! Welcome to my website!");
+        requestAnimationFrame(animate);
     }
 }
 
@@ -198,7 +242,7 @@ function handleButtonClick(buttonLabel) {
             startDialogue("Here are the pages where I list the mods I play with!");
             break;
         case 'Talk':
-            startDialogue("Sure, what do you wanna talk about?");
+            startDialogue("Sure, what do you wanna talk about?","shocked");
             break;
         case 'Project 1':
         case 'Project 2':
@@ -283,25 +327,18 @@ function updateDialogue(timestamp) {
     if (textIndex >= flattenedCharacters.length) return;
 
     if (!lastCharTime) lastCharTime = timestamp;
-
     const timeElapsed = timestamp - lastCharTime;
 
-    let currentChar = flattenedCharacters[textIndex]?.char || '';
     let delay = typingSpeed;
-
     if (displayedText.length > 0) {
         const prevChar = displayedText[displayedText.length - 1];
-        if (['.', '!', '?'].includes(prevChar)) {
-            delay *= 12;
-        } else if ([',', ';', ':'].includes(prevChar)) {
-            delay *= 6;
-        }
+        if ([".", "!", "?"].includes(prevChar)) delay *= 12;
+        else if ([",", ";", ":"].includes(prevChar)) delay *= 6;
     }
 
     if (timeElapsed >= delay) {
-        displayedText += currentChar;
+        displayedText += flattenedCharacters[textIndex]?.char || "";
         playSound(assets.sounds.textSFX);
-
         textIndex++;
         lastCharTime = timestamp;
     }
@@ -310,23 +347,54 @@ function updateDialogue(timestamp) {
 
     if (textIndex < flattenedCharacters.length) {
         requestAnimationFrame(updateDialogue);
+    } else {
+        currentFrame = 0;
+        draw();
     }
 }
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    globalScale = Math.min(canvas.width / assets.images.shopBg.width, canvas.height / assets.images.shopBg.height);
+    globalScale = Math.min(
+        canvas.width / assets.images.shopBg.width,
+        canvas.height / assets.images.shopBg.height
+    );
     drawX = (canvas.width - assets.images.shopBg.width * globalScale) / 2;
     drawY = (canvas.height - assets.images.shopBg.height * globalScale) / 2;
 
-    ctx.drawImage(assets.images.shopBg, drawX, drawY, assets.images.shopBg.width * globalScale, assets.images.shopBg.height * globalScale);
+    ctx.drawImage(
+        assets.images.shopBg,
+        drawX, drawY,
+        assets.images.shopBg.width * globalScale,
+        assets.images.shopBg.height * globalScale
+    );
 
-    if (showDialogue) {
-        drawDialogueBox(drawX + 312 * globalScale, drawY + 1474 * globalScale, 1800 * globalScale, 800 * globalScale);
+    const shopImg = shopkeeperImages[currentExpression][currentFrame];
+    if (shopImg) {
+        ctx.drawImage(
+            shopImg,
+            drawX, drawY,
+            shopImg.width * globalScale,
+            shopImg.height * globalScale
+        );
     }
 
-    drawButtons(drawX + 2400 * globalScale, drawY + 1425 * globalScale, 200 * globalScale, globalScale * 11);
+    if (showDialogue) {
+        drawDialogueBox(
+            drawX + 312 * globalScale,
+            drawY + 1474 * globalScale,
+            1800 * globalScale,
+            800 * globalScale
+        );
+    }
+
+    drawButtons(
+        drawX + 2400 * globalScale,
+        drawY + 1425 * globalScale,
+        200 * globalScale,
+        globalScale * 11
+    );
 }
 
 function precomputeLines() {
@@ -362,11 +430,14 @@ function precomputeLines() {
     });
 }
 
-function startDialogue(newText) {
+function startDialogue(newText, expression = 'neutral') {
     dialogueText = newText;
     displayedText = "";
     textIndex = 0;
     lastCharTime = 0;
+    currentExpression = expression;
+    currentFrame = 0;
+    animationTimer = 0;
     precomputeLines();
     requestAnimationFrame(updateDialogue);
 }
@@ -376,6 +447,28 @@ function playSound(sound) {
         const sfx = sound.cloneNode();
         sfx.play();
     }
+}
+
+let lastAnimTime = 0;
+
+function animate(timestamp) {
+    if (!lastAnimTime) lastAnimTime = timestamp;
+    const delta = timestamp - lastAnimTime;
+
+    // Animate shopkeeper at 2 FPS while dialogue is typing
+    if (textIndex < flattenedCharacters.length) {
+        animationTimer += delta;
+        if (animationTimer >= 250) {
+            currentFrame = 1 - currentFrame;
+            animationTimer = 0;
+        }
+    } else {
+        currentFrame = 0;
+    }
+
+    draw();
+    lastAnimTime = timestamp;
+    requestAnimationFrame(animate);
 }
 
 // Start loading assets immediately
