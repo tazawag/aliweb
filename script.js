@@ -1,12 +1,23 @@
 const canvas = document.getElementById('shopCanvas');
 const ctx = canvas.getContext('2d');
 
-const textSFX = new Audio('res/snd/snd_text.wav');
-const menumoveSFX = new Audio('res/snd/snd_menumove.wav');
+const assets = {
+    images: {
+        shopBg: new Image(),
+        soulImg: new Image()
+    },
+    sounds: {
+        textSFX: new Audio('res/snd/snd_text.wav'),
+        menumoveSFX: new Audio('res/snd/snd_menumove.wav')
+    },
+    font: new FontFace('Determination Mono', 'url(res/determination-mono.otf)')
+};
 
-let fontLoaded = false;
-let bgLoaded = false;
-let soulLoaded = false;
+let assetsLoaded = {
+    shopBg: false,
+    soulImg: false,
+    font: false
+};
 
 let soundEnabled = false;
 
@@ -26,11 +37,42 @@ document.getElementById('enterButton').addEventListener('click', () => {
     }, 300);
 });
 
+function loadAssets() {
+    const shopBg = assets.images.shopBg;
+    shopBg.src = DEBUG ? 'res/img/backgroundFull.png' : 'res/img/background.png';
+    shopBg.onload = () => {
+        assetsLoaded.shopBg = true;
+        checkAllAssetsLoaded();
+    };
+
+    const soulImg = assets.images.soulImg;
+    soulImg.src = 'res/img/soul.png';
+    soulImg.onload = () => {
+        assetsLoaded.soulImg = true;
+        checkAllAssetsLoaded();
+    };
+
+    assets.font.load().then((loadedFont) => {
+        document.fonts.add(loadedFont);
+        assetsLoaded.font = true;
+        checkAllAssetsLoaded();
+    });
+}
+
+function checkAllAssetsLoaded() {
+    if (assetsLoaded.shopBg && assetsLoaded.soulImg && assetsLoaded.font) {
+        const enterBtn = document.getElementById('enterButton');
+        enterBtn.style.display = 'block';
+        enterBtn.classList.add('show');
+        resizeCanvas();
+    }
+}
+
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    if (fontLoaded && bgLoaded && soulLoaded) {
+    if (assetsLoaded.shopBg && assetsLoaded.soulImg && assetsLoaded.font) {
         draw();
     }
 }
@@ -39,20 +81,19 @@ resizeCanvas();
 
 const DEBUG = false;
 
-const shopBg = new Image();
-if (DEBUG) {
-    shopBg.src = 'res/img/backgroundFull.png';
-} else {
-    shopBg.src = 'res/img/background.png';
-}
+const menus = {
+    main: ['Projects', 'Mods', 'Talk', 'Exit'],
+    Projects: ['Project 1', 'Project 2', 'Back'],
+    Mods: ['Lethal C.', 'R.E.P.O.', 'Back'],
+    Talk: ['About you', 'This page', 'Back']
+};
 
-const soulImg = new Image();
-soulImg.src = 'res/img/soul.png';
-
-const customFont = new FontFace('Determination Mono', 'url(res/determination-mono.otf)');
+let currentMenu = 'main';
 let hoverIndex = 0;
 
-const buttons = ['Projects', 'Mods', 'Talk', 'Exit'];
+function getButtons() {
+    return menus[currentMenu] || [];
+}
 
 let dialogueText = "";
 let displayedText = "";
@@ -68,24 +109,11 @@ let drawX = 0;
 let drawY = 0;
 
 function tryDraw() {
-    if (fontLoaded && bgLoaded && soulLoaded && soundEnabled) {
+    if (assetsLoaded.shopBg && assetsLoaded.soulImg && assetsLoaded.font && soundEnabled) {
         draw();
         startDialogue("Hi! Welcome to my website!");
     }
 }
-
-customFont.load().then((loadedFont) => {
-    document.fonts.add(loadedFont);
-    fontLoaded = true;
-});
-
-shopBg.onload = () => {
-    bgLoaded = true;
-};
-
-soulImg.onload = () => {
-    soulLoaded = true;
-};
 
 function getButtonHitbox(i) {
     const fontScale = globalScale * 11;
@@ -96,9 +124,9 @@ function getButtonHitbox(i) {
     const buttonY = drawY + 1475 * globalScale + 10 * globalScale + i * spacing;
 
     const width = 800 * globalScale;
-    const height = fontSize*1.3;
+    const height = fontSize * 1.3;
 
-    return { x: buttonX, y: buttonY - height, width, height }; // top-left corner and size
+    return { x: buttonX, y: buttonY - height, width, height };
 }
 
 canvas.addEventListener('mousemove', (e) => {
@@ -108,7 +136,7 @@ canvas.addEventListener('mousemove', (e) => {
 
     let found = -1;
 
-    buttons.forEach((btn, i) => {
+    getButtons().forEach((btn, i) => {
         const hitbox = getButtonHitbox(i);
 
         if (
@@ -123,16 +151,17 @@ canvas.addEventListener('mousemove', (e) => {
 
     if (found !== -1 && found !== hoverIndex) {
         hoverIndex = found;
-        playSound(menumoveSFX);
+        playSound(assets.sounds.menumoveSFX);
         draw();
     }
 });
+
 canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
 
-    buttons.forEach((btn, i) => {
+    getButtons().forEach((btn, i) => {
         const hitbox = getButtonHitbox(i);
 
         if (
@@ -147,38 +176,50 @@ canvas.addEventListener('click', (e) => {
 });
 
 function handleButtonClick(buttonLabel) {
+    if (buttonLabel === 'Back') {
+        currentMenu = 'main';
+        hoverIndex = 0;
+        startDialogue("Hi! Welcome to my website!");
+        draw();
+        return;
+    }
+
+    if (menus[buttonLabel]) {
+        currentMenu = buttonLabel;
+        hoverIndex = 0;
+        draw();
+    }
+
     switch (buttonLabel) {
         case 'Projects':
-            onProjectsClick();
+            startDialogue("Wanna learn about my projects?");
             break;
         case 'Mods':
-            onModsClick();
+            startDialogue("Here are the pages where I list the mods I play with!");
             break;
         case 'Talk':
-            onTalkClick();
+            startDialogue("Sure, what do you wanna talk about?");
+            break;
+        case 'Project 1':
+        case 'Project 2':
+            startDialogue(buttonLabel + "!");
+            break;
+        case 'Lethal C.':
+        case 'R.E.P.O.':
+            startDialogue("Here's some info about my " + buttonLabel + " mods.");
+            break;
+        case 'About you':
+            startDialogue("Me? I'm a dev who loves video games. Shocker, right?");
+            break;
+        case 'This page':
+            startDialogue("I made this page out of boredom, I wanted to make my own little silly website. It was also good training!");
             break;
         case 'Exit':
-            onExitClick();
+            startDialogue("This is a website, if you wanna leave you can just close the tab.");
             break;
         default:
             console.log('Unknown button:', buttonLabel);
     }
-}
-
-function onProjectsClick() {
-    alert('Projects!');
-}
-
-function onModsClick() {
-    alert('Mods!');
-}
-
-function onTalkClick() {
-    alert('Let\'s talk!');
-}
-
-function onExitClick() {
-    alert('Goodbye!');
 }
 
 function drawButtons(x, y, spacing, scale) {
@@ -188,12 +229,12 @@ function drawButtons(x, y, spacing, scale) {
     ctx.font = `${fontSize}px "Determination Mono", monospace`;
     ctx.fillStyle = '#ffffff';
 
-    buttons.forEach((btn, i) => {
+    getButtons().forEach((btn, i) => {
         const btnY = y + i * spacing;
         let btnX = x;
 
         if (hoverIndex === i) {
-            ctx.drawImage(soulImg, btnX - 13.9 * scale, btnY - fontSize + 6.9 * scale, 7.5 * scale, 7.5 * scale);
+            ctx.drawImage(assets.images.soulImg, btnX - 13.9 * scale, btnY - fontSize + 6.9 * scale, 7.5 * scale, 7.5 * scale);
         }
 
         for (let char of btn) {
@@ -220,7 +261,6 @@ function drawDialogueBox(x, y, width, height) {
 
     const lineHeight = fontSize * 1.2;
 
-    // Draw line by line
     let charIndex = 0;
     for (let i = 0; i < precomputedLines.length; i++) {
         let line = precomputedLines[i];
@@ -260,7 +300,7 @@ function updateDialogue(timestamp) {
 
     if (timeElapsed >= delay) {
         displayedText += currentChar;
-        playSound(textSFX);
+        playSound(assets.sounds.textSFX);
 
         textIndex++;
         lastCharTime = timestamp;
@@ -276,14 +316,15 @@ function updateDialogue(timestamp) {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    globalScale = Math.min(canvas.width / shopBg.width, canvas.height / shopBg.height);
-    drawX = (canvas.width - shopBg.width * globalScale) / 2;
-    drawY = (canvas.height - shopBg.height * globalScale) / 2;
-    ctx.drawImage(shopBg, drawX, drawY, shopBg.width * globalScale, shopBg.height * globalScale);
+    globalScale = Math.min(canvas.width / assets.images.shopBg.width, canvas.height / assets.images.shopBg.height);
+    drawX = (canvas.width - assets.images.shopBg.width * globalScale) / 2;
+    drawY = (canvas.height - assets.images.shopBg.height * globalScale) / 2;
+
+    ctx.drawImage(assets.images.shopBg, drawX, drawY, assets.images.shopBg.width * globalScale, assets.images.shopBg.height * globalScale);
 
     if (showDialogue) {
         drawDialogueBox(drawX + 312 * globalScale, drawY + 1474 * globalScale, 1800 * globalScale, 800 * globalScale);
-    }    
+    }
 
     drawButtons(drawX + 2400 * globalScale, drawY + 1425 * globalScale, 200 * globalScale, globalScale * 11);
 }
@@ -313,7 +354,6 @@ function precomputeLines() {
 
     precomputedLines = lines;
 
-    // Flatten into char-level entries
     flattenedCharacters = [];
     lines.forEach((line, i) => {
         for (let char of line) {
@@ -337,3 +377,6 @@ function playSound(sound) {
         sfx.play();
     }
 }
+
+// Start loading assets immediately
+loadAssets();
