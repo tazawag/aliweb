@@ -1,9 +1,10 @@
 html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
     background: black;
+    color: white;
     font-family: 'Determination Mono', monospace;
-    overflow: hidden;
 }
 
 canvas {
@@ -17,16 +18,19 @@ canvas {
     position: fixed;
     inset: 0;
     background: black;
-    color: white;
-    font-family: 'Determination Mono', monospace;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     z-index: 9999;
-    height: 100vh;
-    width: 100vw;
     text-align: center;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+#introScreen.hidden {
+    opacity: 0;
+    pointer-events: none;
 }
 
 #introScreen h1 {

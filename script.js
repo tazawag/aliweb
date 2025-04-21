@@ -14,12 +14,16 @@ document.getElementById('enterButton').addEventListener('click', () => {
     soundEnabled = true;
 
     const introScreen = document.getElementById('introScreen');
-    introScreen.style.display = 'none';
+    introScreen.classList.add('hidden');
 
-    const silent = new Audio();
-    silent.play().catch(() => {});
+    setTimeout(() => {
+        introScreen.style.display = 'none';
 
-    tryDraw();
+        const silent = new Audio();
+        silent.play().catch(() => {});
+
+        tryDraw();
+    }, 300);
 });
 
 function resizeCanvas() {
@@ -137,10 +141,45 @@ canvas.addEventListener('click', (e) => {
             mouseY >= hitbox.y &&
             mouseY <= hitbox.y + hitbox.height
         ) {
-            alert(btn);
+            handleButtonClick(btn);
         }
     });
 });
+
+function handleButtonClick(buttonLabel) {
+    switch (buttonLabel) {
+        case 'Projects':
+            onProjectsClick();
+            break;
+        case 'Mods':
+            onModsClick();
+            break;
+        case 'Talk':
+            onTalkClick();
+            break;
+        case 'Exit':
+            onExitClick();
+            break;
+        default:
+            console.log('Unknown button:', buttonLabel);
+    }
+}
+
+function onProjectsClick() {
+    alert('Projects!');
+}
+
+function onModsClick() {
+    alert('Mods!');
+}
+
+function onTalkClick() {
+    alert('Let\'s talk!');
+}
+
+function onExitClick() {
+    alert('Goodbye!');
+}
 
 function drawButtons(x, y, spacing, scale) {
     const fontSize = 14 * scale;
