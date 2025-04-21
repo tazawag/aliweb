@@ -1,0 +1,33 @@
+name;link;desc;important;ama;tags;hasConfig
+MoreCompany;https://thunderstore.io/c/lethal-company/p/notnotnotswipez/MoreCompany/;Permet de jouer à plus de 4 joueurs et rajoute un système de cosmétiques.;true;true;Essentiel,Cosmétiques;false
+FreeeeeeMoooooons;https://thunderstore.io/c/lethal-company/p/SlushyRH/FreeeeeeMoooooons/;Rends toutes les lunes gratuites.;true;false;Fun;false
+LethalFashion;https://thunderstore.io/c/lethal-company/p/BatTeam/LethalFashion/;Débloque toutes les tenues dès le début de la partie.;true;true;Cosmétiques,Host-Side;false
+YippeeMod;https://thunderstore.io/c/lethal-company/p/sunnobunno/YippeeMod/;<a href="https://www.youtube.com/watch?v=of4aFbUKjbk" target="_blank">YIPPEEEEE</a>;false;false;Sons,Fun;false
+LateCompany;https://thunderstore.io/c/lethal-company/p/anormaltwig/LateCompany/;Permet d’inviter des joueurs après le début d’une partie.;true;true;Essentiel,Pratique;false
+Coroner;https://thunderstore.io/c/lethal-company/p/EliteMasterEric/Coroner/;Ajoute des commentaires sur l’écran de description de joueurs à la fin d’une manche (ex. comment ils sont morts);false;false;Fun,Pratique;false
+CoilHeadStare;https://thunderstore.io/c/lethal-company/p/TwinDimensionalProductions/CoilHeadStare/;Permet aux Coil-Heads de vous regarder quand ils ne bougent pas.;false;false;Fun,Visuel;false
+HealthMetrics;https://thunderstore.io/c/lethal-company/p/matsuura/HealthMetrics/;Ajoute un compteur de PV.;false;true;Pratique;false
+Corporate Restructure;https://thunderstore.io/c/lethal-company/p/Jamil/Corporate_Restructure/;Ajoute des informations en plus au dessus de l'écran du vaisseau. (Valeur du loot, heure, etc..);false;false;Pratique;false
+Mimics;https://thunderstore.io/c/lethal-company/p/x753/Mimics/;Ajoute de fausses portes secondaires qui mangent les joueurs qui l'ouvrent.;true;false;Monstre;false
+Skinwalkers;https://thunderstore.io/c/lethal-company/p/RugbugRedfern/Skinwalkers/;Permet aux monstres de ré-utiliser nos voix de façon aléatoire.;false;false;Monstre,Fun;false
+LethalCompanyVR;https://thunderstore.io/c/lethal-company/p/DaXcess/LethalCompanyVR/;Permet de jouer en VR et de voir les joueurs VR.;true;false;Fun,Pratique;false
+FlashlightToggle;https://thunderstore.io/c/lethal-company/p/Renegades/FlashlightToggle/;Permet d'allumer/éteindre une lampe avec F.;false;false;Pratique;false
+More Suits;https://thunderstore.io/c/lethal-company/p/x753/More_Suits/;Ajoute de nouvelles tenues au jeu.;true;false;Cosmétiques,Fun;false
+Lethal Master Chief;https://thunderstore.io/c/lethal-company/p/Pee_John_Labs/Lethal_Master_Chief/;Ajoute la tenue de Master Chief.;true;false;Cosmétiques,Fun;false
+ShipLoot;https://thunderstore.io/c/lethal-company/p/tinyhoot/ShipLoot/;Affiche la valeur du loot contenu dans le vaisseau.;false;true;Pratique;false
+LCMaxSoundsFix;https://thunderstore.io/c/lethal-company/p/Hardy/LCMaxSoundsFix/;Corrige un bug effaçant des sons si trop de sons se jouent en même temps.;false;false;Pratique,Optimisation;false
+CullFactory;https://thunderstore.io/c/lethal-company/p/fumiko/CullFactory/;Force le jeu à ne pas afficher les salles que l'on ne voit pas pour améliorer les performances.;false;false;Pratique,Optimisation;false
+Monster Plushies;https://thunderstore.io/c/lethal-company/p/Scintesto/Monster_Plushies/;Ajoute des peluches des monstres à trouver sur les lunes.;true;false;Scrap,Fun;false
+NoSellLimit;https://thunderstore.io/c/lethal-company/p/ViViKo/NoSellLimit/;Retire la limite d'objets placés pour la vente.;true;false;Pratique,Optimisation;false
+LethalPresents;https://thunderstore.io/c/lethal-company/p/Azim/LethalPresents/;Donne aux cadeaux une possibilité de faire apparaître un monstre au lieu d'un objet.;true;false;Fun,Monstre;true
+HoarderBugUseItems;https://thunderstore.io/c/lethal-company/p/mattplays/HoarderBugUseItems/;Permet aux <a href="https://lethal-company.fandom.com/wiki/Hoarding_Bug" target="_blank">Hoarding Bugs</a> d'utiliser les objets qu'ils tiennent.;true;false;Fun,Monstre;false
+Tazawa's Cosmetics;https://thunderstore.io/c/lethal-company/p/Catshape/Tazawas_Cosmetics/;Collection de nos cosmétiques.;true;true;Cosmétiques,Fun;false
+Scopophobia;https://thunderstore.io/c/lethal-company/p/jaspercreations/Scopophobia/;Ajoute SCP-096 (Shy Guy) au jeu.;true;false;Monstre;false
+BetterItemScan;https://thunderstore.io/c/lethal-company/p/PopleZoo/BetterItemScan/;Améliore le scan des objets.;false;false;Pratique;false
+EnemySoundFixes;https://thunderstore.io/c/lethal-company/p/ButteryStancakes/EnemySoundFixes/;Corrige un bug empêchant certains sons de se jouer correctement.;false;false;Optimisation;false
+HideChat;https://thunderstore.io/c/lethal-company/p/Monkeytype/HideChat/;Cache entièrement le chat lorsqu'il n'est pas utilisé.;false;false;Pratique;false
+SpectateEnemies;https://thunderstore.io/c/lethal-company/p/AllToasters/SpectateEnemies/;Permet aux morts de voir le point de vue des monstres.;false;false;Fun,Monstre;false
+Terminal Clock;https://thunderstore.io/c/lethal-company/p/NotAtomicBomb/Terminal_Clock/;Affiche l'heure sur le terminal.;false;false;Pratique;false
+BunkbedRevive;https://thunderstore.io/c/lethal-company/p/ViViKo/BunkbedRevive/;Permet de réanimer des corps aux lits du vaisseau pour un prix.;true;false;Fun,Pratique;true
+QuotaRollover;https://thunderstore.io/c/lethal-company/p/boxofbiscuits97/QuotaRollover/;Permet aux ventes de dépasser sur le quota suivant.;true;false;Pratique,Rebalancing;false
+Lock Doors Mod;https://thunderstore.io/c/lethal-company/p/ENZ/Lock_Doors_Mod/;Permet de vérouiller des portes avec une clé.;true;false;Pratique,Fun;false

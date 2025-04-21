@@ -20,7 +20,7 @@ let assetsLoaded = {
     shopkeeperImages: false
 };
 
-const shopkeeperImages = {}; // { expression: [frame1, frame2] }
+const shopkeeperImages = {};
 const expressions = ['neutral','shocked'];
 let currentExpression = 'neutral';
 let currentFrame = 0;
@@ -123,7 +123,9 @@ const menus = {
     main: ['Projects', 'Mods', 'Talk', 'Exit'],
     Projects: ['Project 1', 'Project 2', 'Back'],
     Mods: ['Lethal C.', 'R.E.P.O.', 'Back'],
-    Talk: ['About you', 'This page', 'Back']
+    Talk: ['About you', 'This page', 'Back'],
+    'Lethal C.': ['Yes', 'No'],
+    'R.E.P.O.': ['Yes', 'No']
 };
 
 let currentMenu = 'main';
@@ -228,6 +230,19 @@ function handleButtonClick(buttonLabel) {
         return;
     }
 
+    if (buttonLabel === 'Yes') {
+        if (currentMenu === 'Lethal C.') {
+            window.location.href = 'LethalMods';
+        }
+        return;
+    } else if (buttonLabel === 'No') {
+        currentMenu = 'Mods';
+        hoverIndex = 0;
+        startDialogue("Here are the pages where I list the mods I play with!");
+        draw();
+        return;
+    }
+
     if (menus[buttonLabel]) {
         currentMenu = buttonLabel;
         hoverIndex = 0;
@@ -250,7 +265,7 @@ function handleButtonClick(buttonLabel) {
             break;
         case 'Lethal C.':
         case 'R.E.P.O.':
-            startDialogue("Here's some info about my " + buttonLabel + " mods.");
+            startDialogue("That will bring you to another page, you OK with that?");
             break;
         case 'About you':
             startDialogue("Me? I'm a dev who loves video games. Shocker, right?");
@@ -455,7 +470,6 @@ function animate(timestamp) {
     if (!lastAnimTime) lastAnimTime = timestamp;
     const delta = timestamp - lastAnimTime;
 
-    // Animate shopkeeper at 2 FPS while dialogue is typing
     if (textIndex < flattenedCharacters.length) {
         animationTimer += delta;
         if (animationTimer >= 250) {
@@ -471,5 +485,4 @@ function animate(timestamp) {
     requestAnimationFrame(animate);
 }
 
-// Start loading assets immediately
 loadAssets();
