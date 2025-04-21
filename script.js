@@ -223,7 +223,7 @@ function handleButtonClick(buttonLabel) {
     if (buttonLabel === 'Back') {
         currentMenu = 'main';
         hoverIndex = 0;
-        startDialogue("Hi! Welcome to my website!");
+        startDialogue("Hi! Welcome to my website!", 'neutral');
         draw();
         return;
     }
@@ -430,12 +430,12 @@ function precomputeLines() {
     });
 }
 
-function startDialogue(newText, expression = 'neutral') {
+function startDialogue(newText, expression = '') {
     dialogueText = newText;
     displayedText = "";
     textIndex = 0;
     lastCharTime = 0;
-    currentExpression = expression;
+    currentExpression = expression == '' ? currentExpression : expression;
     currentFrame = 0;
     animationTimer = 0;
     precomputeLines();
