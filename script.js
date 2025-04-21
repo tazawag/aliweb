@@ -233,6 +233,8 @@ function handleButtonClick(buttonLabel) {
     if (buttonLabel === 'Yes') {
         if (currentMenu === 'Lethal C.') {
             window.location.href = 'LethalMods';
+        } else if (currentMenu === 'R.E.P.O.') {
+            window.location.href = 'REPOMods';
         }
         return;
     } else if (buttonLabel === 'No') {
